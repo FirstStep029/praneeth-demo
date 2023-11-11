@@ -9,15 +9,27 @@
 		},
 		"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "ads-conn-string"
+			"defaultValue": "@linkedService().lsprm_kv_Secret"
 		},
 		"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://akv-praneeth-dev.vault.azure.net/"
+			"defaultValue": "@{linkedService().lprm_key_vault_uri}"
+		},
+		"tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name": {
+			"type": "string",
+			"defaultValue": "demo"
 		},
 		"default_properties_gprm_key_vault_url_value": {
 			"type": "string",
 			"defaultValue": "https://akv-praneeth-dev.vault.azure.net/"
+		},
+		"default_properties_gprm_file_name_value": {
+			"type": "string",
+			"defaultValue": "dataset.parquet"
+		},
+		"default_properties_gprm_secret_value": {
+			"type": "string",
+			"defaultValue": "ads-conn-string"
 		},
 		"containerUri": {
 			"type": "string",
@@ -49,11 +61,20 @@
 					"default_properties_gprm_key_vault_url_value": {
 						"value": "[parameters('default_properties_gprm_key_vault_url_value')]"
 					},
+					"default_properties_gprm_file_name_value": {
+						"value": "[parameters('default_properties_gprm_file_name_value')]"
+					},
+					"default_properties_gprm_secret_value": {
+						"value": "[parameters('default_properties_gprm_secret_value')]"
+					},
 					"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
 						"value": "[parameters('ls_akv_praneeth_demo_properties_typeProperties_baseUrl')]"
 					},
 					"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName')]"
+					},
+					"tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name": {
+						"value": "[parameters('tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name')]"
 					}
 				}
 			},

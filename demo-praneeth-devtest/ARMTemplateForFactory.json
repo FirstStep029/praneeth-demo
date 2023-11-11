@@ -9,15 +9,27 @@
 		},
 		"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "ads-conn-string"
+			"defaultValue": "@linkedService().lsprm_kv_Secret"
 		},
 		"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://akv-praneeth-dev.vault.azure.net/"
+			"defaultValue": "@{linkedService().lprm_key_vault_uri}"
+		},
+		"tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name": {
+			"type": "string",
+			"defaultValue": "demo"
 		},
 		"default_properties_gprm_key_vault_url_value": {
 			"type": "string",
 			"defaultValue": "https://akv-praneeth-dev.vault.azure.net/"
+		},
+		"default_properties_gprm_file_name_value": {
+			"type": "string",
+			"defaultValue": "dataset.parquet"
+		},
+		"default_properties_gprm_secret_value": {
+			"type": "string",
+			"defaultValue": "ads-conn-string"
 		}
 	},
 	"variables": {
@@ -84,7 +96,15 @@
 									},
 									"file_name": "Electric_Vehicle_Population_Data.csv",
 									"file_path": "data/inbound/electric_vehicle_data",
-									"delimiter": ","
+									"delimiter": ",",
+									"kv_uri": {
+										"value": "@pipeline().globalParameters.gprm_key_vault_url",
+										"type": "Expression"
+									},
+									"kv_secret": {
+										"value": "@pipeline().globalParameters.gprm_secret",
+										"type": "Expression"
+									}
 								}
 							}
 						],
@@ -98,7 +118,18 @@
 										"type": "Expression"
 									},
 									"file_path": "data/outbound/electric_vehicle_data",
-									"file_name": "dataset.parquet"
+									"file_name": {
+										"value": "@pipeline().globalParameters.gprm_file_name",
+										"type": "Expression"
+									},
+									"kv_uri": {
+										"value": "@pipeline().globalParameters.gprm_key_vault_url",
+										"type": "Expression"
+									},
+									"kv_secret": {
+										"value": "@pipeline().globalParameters.gprm_secret",
+										"type": "Expression"
+									}
 								}
 							}
 						]
@@ -126,7 +157,17 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "ls_abs_praneeth_demo",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"lsprm_kv_uri": {
+							"value": "@dataset().kv_uri",
+							"type": "Expression"
+						},
+						"lsprm_kv_Secret": {
+							"value": "@dataset().kv_secret",
+							"type": "Expression"
+						}
+					}
 				},
 				"parameters": {
 					"container_name": {
@@ -139,6 +180,12 @@
 						"type": "string"
 					},
 					"delimiter": {
+						"type": "string"
+					},
+					"kv_uri": {
+						"type": "string"
+					},
+					"kv_secret": {
 						"type": "string"
 					}
 				},
@@ -181,7 +228,17 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "ls_abs_praneeth_demo",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"lsprm_kv_uri": {
+							"value": "@dataset().kv_uri",
+							"type": "Expression"
+						},
+						"lsprm_kv_Secret": {
+							"value": "@dataset().kv_secret",
+							"type": "Expression"
+						}
+					}
 				},
 				"parameters": {
 					"container_name": {
@@ -191,6 +248,12 @@
 						"type": "string"
 					},
 					"file_name": {
+						"type": "string"
+					},
+					"kv_uri": {
+						"type": "string"
+					},
+					"kv_secret": {
 						"type": "string"
 					}
 				},
@@ -225,6 +288,14 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"parameters": {
+					"lsprm_kv_uri": {
+						"type": "string"
+					},
+					"lsprm_kv_Secret": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "AzureBlobStorage",
 				"typeProperties": {
@@ -232,9 +303,18 @@
 						"type": "AzureKeyVaultSecret",
 						"store": {
 							"referenceName": "ls_akv_praneeth_demo",
-							"type": "LinkedServiceReference"
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"lprm_key_vault_uri": {
+									"value": "@linkedService().lsprm_kv_uri",
+									"type": "Expression"
+								}
+							}
 						},
-						"secretName": "[parameters('ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName')]"
+						"secretName": {
+							"value": "[parameters('ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						}
 					}
 				}
 			},
@@ -247,6 +327,11 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"parameters": {
+					"lprm_key_vault_uri": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "AzureKeyVault",
 				"typeProperties": {
@@ -256,6 +341,46 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/tr_praneeth_demo')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "simple-copy-activity",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"prm_container_name": "[parameters('tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2023-11-11T10:30:00",
+						"timeZone": "India Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								16
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/simple-copy-activity')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/default')]",
 			"type": "Microsoft.DataFactory/factories/globalparameters",
 			"apiVersion": "2018-06-01",
@@ -263,6 +388,14 @@
 				"gprm_key_vault_url": {
 					"type": "string",
 					"value": "[parameters('default_properties_gprm_key_vault_url_value')]"
+				},
+				"gprm_file_name": {
+					"type": "string",
+					"value": "[parameters('default_properties_gprm_file_name_value')]"
+				},
+				"gprm_secret": {
+					"type": "string",
+					"value": "[parameters('default_properties_gprm_secret_value')]"
 				}
 			},
 			"dependsOn": []

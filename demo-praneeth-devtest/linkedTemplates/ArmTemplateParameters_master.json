@@ -6,13 +6,22 @@
 			"value": "demo-praneeth-devtest"
 		},
 		"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
-			"value": "ads-conn-string"
+			"value": "@linkedService().lsprm_kv_Secret"
 		},
 		"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
-			"value": "https://akv-praneeth-dev.vault.azure.net/"
+			"value": "@{linkedService().lprm_key_vault_uri}"
+		},
+		"tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name": {
+			"value": "demo"
 		},
 		"default_properties_gprm_key_vault_url_value": {
 			"value": "https://akv-praneeth-dev.vault.azure.net/"
+		},
+		"default_properties_gprm_file_name_value": {
+			"value": "dataset.parquet"
+		},
+		"default_properties_gprm_secret_value": {
+			"value": "ads-conn-string"
 		},
 		"containerUri": {
 			"value": ""
