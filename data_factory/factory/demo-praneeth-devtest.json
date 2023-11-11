@@ -1,0 +1,12 @@
+{
+	"name": "demo-praneeth-devtest",
+	"properties": {
+		"globalParameters": {
+			"gprm_key_vault_url": {
+				"type": "string",
+				"value": "https://akv-praneeth-dev.vault.azure.net/"
+			}
+		}
+	},
+	"location": "southindia"
+}
