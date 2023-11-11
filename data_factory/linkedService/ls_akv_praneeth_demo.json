@@ -1,0 +1,10 @@
+{
+	"name": "ls_akv_praneeth_demo",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://akv-praneeth-dev.vault.azure.net/"
+		}
+	}
+}
