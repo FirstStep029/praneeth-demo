@@ -5,6 +5,10 @@
 			"gprm_key_vault_url": {
 				"type": "string",
 				"value": "https://akv-praneeth-dev.vault.azure.net/"
+			},
+			"gprm_file_name": {
+				"type": "string",
+				"value": "dataset.parquet"
 			}
 		}
 	},
