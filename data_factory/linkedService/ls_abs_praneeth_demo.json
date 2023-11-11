@@ -4,6 +4,9 @@
 		"parameters": {
 			"lsprm_kv_uri": {
 				"type": "string"
+			},
+			"lsprm_kv_Secret": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -21,7 +24,10 @@
 						}
 					}
 				},
-				"secretName": "ads-conn-string"
+				"secretName": {
+					"value": "@linkedService().lsprm_kv_Secret",
+					"type": "Expression"
+				}
 			}
 		}
 	},
