@@ -56,7 +56,11 @@
 							},
 							"file_name": "Electric_Vehicle_Population_Data.csv",
 							"file_path": "data/inbound/electric_vehicle_data",
-							"delimiter": ","
+							"delimiter": ",",
+							"kv_uri": {
+								"value": "@pipeline().globalParameters.gprm_key_vault_url",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -70,7 +74,14 @@
 								"type": "Expression"
 							},
 							"file_path": "data/outbound/electric_vehicle_data",
-							"file_name": "dataset.parquet"
+							"file_name": {
+								"value": "@pipeline().globalParameters.gprm_file_name",
+								"type": "Expression"
+							},
+							"kv_uri": {
+								"value": "@pipeline().globalParameters.gprm_key_vault_url",
+								"type": "Expression"
+							}
 						}
 					}
 				]

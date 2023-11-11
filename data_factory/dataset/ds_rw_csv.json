@@ -3,7 +3,13 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_abs_praneeth_demo",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"lsprm_kv_uri": {
+					"value": "@dataset().kv_uri",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"container_name": {
@@ -16,6 +22,9 @@
 				"type": "string"
 			},
 			"delimiter": {
+				"type": "string"
+			},
+			"kv_uri": {
 				"type": "string"
 			}
 		},
