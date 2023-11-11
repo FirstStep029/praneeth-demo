@@ -1,0 +1,75 @@
+{
+	"name": "simple-copy-activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_rw_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "demo",
+							"file_name": "Electric_Vehicle_Population_Data.csv",
+							"file_path": "data/inbound/electric_Vehicle_data",
+							"delimiter": ","
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_rw_parqueet",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "demo",
+							"file_path": "data/outbound/electric_Vehicle_data",
+							"file_name": "dataset.parquet"
+						}
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
