@@ -50,7 +50,10 @@
 						"referenceName": "ds_rw_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "demo",
+							"container_name": {
+								"value": "@pipeline().parameters.prm_container_name",
+								"type": "Expression"
+							},
 							"file_name": "Electric_Vehicle_Population_Data.csv",
 							"file_path": "data/inbound/electric_vehicle_data",
 							"delimiter": ","
@@ -62,7 +65,10 @@
 						"referenceName": "ds_rw_parqueet",
 						"type": "DatasetReference",
 						"parameters": {
-							"container_name": "demo",
+							"container_name": {
+								"value": "@pipeline().parameters.prm_container_name",
+								"type": "Expression"
+							},
 							"file_path": "data/outbound/electric_vehicle_data",
 							"file_name": "dataset.parquet"
 						}
@@ -70,6 +76,11 @@
 				]
 			}
 		],
+		"parameters": {
+			"prm_container_name": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
