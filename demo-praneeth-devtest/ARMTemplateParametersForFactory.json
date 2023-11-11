@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "demo-praneeth-devtest"
+		},
+		"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
+			"value": "ads-conn-string"
+		},
+		"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
+			"value": "https://akv-praneeth-dev.vault.azure.net/"
+		},
+		"default_properties_gprm_key_vault_url_value": {
+			"value": "https://akv-praneeth-dev.vault.azure.net/"
+		}
+	}
+}

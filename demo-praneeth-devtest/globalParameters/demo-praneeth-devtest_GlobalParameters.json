@@ -1,0 +1,6 @@
+{
+	"gprm_key_vault_url": {
+		"type": "string",
+		"value": "https://akv-praneeth-dev.vault.azure.net/"
+	}
+}
