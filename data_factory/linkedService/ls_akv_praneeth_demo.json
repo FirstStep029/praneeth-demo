@@ -9,7 +9,7 @@
 		"annotations": [],
 		"type": "AzureKeyVault",
 		"typeProperties": {
-			"baseUrl": "@{linkedService().lprm_key_vault_uri}"
+			"baseUrl": "https://akv-praneeth-dev.vault.azure.net/"
 		}
 	}
 }
