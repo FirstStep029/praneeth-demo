@@ -52,7 +52,7 @@
 						"parameters": {
 							"container_name": "demo",
 							"file_name": "Electric_Vehicle_Population_Data.csv",
-							"file_path": "data/inbound/electric_Vehicle_data",
+							"file_path": "data/inbound/electric_vehicle_data",
 							"delimiter": ","
 						}
 					}
@@ -63,7 +63,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "demo",
-							"file_path": "data/outbound/electric_Vehicle_data",
+							"file_path": "data/outbound/electric_vehicle_data",
 							"file_name": "dataset.parquet"
 						}
 					}
