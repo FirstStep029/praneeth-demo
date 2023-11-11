@@ -1,6 +1,11 @@
 {
 	"name": "ls_abs_praneeth_demo",
 	"properties": {
+		"parameters": {
+			"lsprm_kv_uri": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
@@ -8,7 +13,13 @@
 				"type": "AzureKeyVaultSecret",
 				"store": {
 					"referenceName": "ls_akv_praneeth_demo",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"lprm_key_vault_uri": {
+							"value": "@linkedService().lsprm_kv_uri",
+							"type": "Expression"
+						}
+					}
 				},
 				"secretName": "ads-conn-string"
 			}
