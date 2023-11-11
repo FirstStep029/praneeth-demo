@@ -60,6 +60,10 @@
 							"kv_uri": {
 								"value": "@pipeline().globalParameters.gprm_key_vault_url",
 								"type": "Expression"
+							},
+							"kv_secret": {
+								"value": "@pipeline().globalParameters.gprm_secret",
+								"type": "Expression"
 							}
 						}
 					}
@@ -80,6 +84,10 @@
 							},
 							"kv_uri": {
 								"value": "@pipeline().globalParameters.gprm_key_vault_url",
+								"type": "Expression"
+							},
+							"kv_secret": {
+								"value": "@pipeline().globalParameters.gprm_secret",
 								"type": "Expression"
 							}
 						}

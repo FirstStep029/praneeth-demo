@@ -8,6 +8,10 @@
 				"lsprm_kv_uri": {
 					"value": "@dataset().kv_uri",
 					"type": "Expression"
+				},
+				"lsprm_kv_Secret": {
+					"value": "@dataset().kv_secret",
+					"type": "Expression"
 				}
 			}
 		},
@@ -25,6 +29,9 @@
 				"type": "string"
 			},
 			"kv_uri": {
+				"type": "string"
+			},
+			"kv_secret": {
 				"type": "string"
 			}
 		},
