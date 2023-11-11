@@ -9,6 +9,10 @@
 			"gprm_file_name": {
 				"type": "string",
 				"value": "dataset.parquet"
+			},
+			"gprm_secret": {
+				"type": "string",
+				"value": "ads-conn-string"
 			}
 		}
 	},
