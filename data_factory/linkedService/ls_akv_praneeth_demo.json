@@ -1,10 +1,15 @@
 {
 	"name": "ls_akv_praneeth_demo",
 	"properties": {
+		"parameters": {
+			"lprm_key_vault_uri": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureKeyVault",
 		"typeProperties": {
-			"baseUrl": "https://akv-praneeth-dev.vault.azure.net/"
+			"baseUrl": "@{linkedService().lprm_key_vault_uri}"
 		}
 	}
 }
