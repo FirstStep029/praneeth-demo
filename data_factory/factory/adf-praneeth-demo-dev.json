@@ -1,0 +1,9 @@
+{
+	"name": "adf-praneeth-demo-dev",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ed33b429-1297-4644-a134-acae88c429a4",
+		"tenantId": "10161524-c00e-46c3-95f0-0cde594ebfef"
+	}
+}
