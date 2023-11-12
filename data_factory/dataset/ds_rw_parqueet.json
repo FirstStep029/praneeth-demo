@@ -5,10 +5,6 @@
 			"referenceName": "ls_abs_praneeth_demo",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"lsprm_kv_uri": {
-					"value": "@dataset().kv_uri",
-					"type": "Expression"
-				},
 				"lsprm_kv_Secret": {
 					"value": "@dataset().kv_secret",
 					"type": "Expression"
@@ -23,9 +19,6 @@
 				"type": "string"
 			},
 			"file_name": {
-				"type": "string"
-			},
-			"kv_uri": {
 				"type": "string"
 			},
 			"kv_secret": {
