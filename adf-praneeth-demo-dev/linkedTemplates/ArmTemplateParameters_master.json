@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-praneeth-demo-dev"
+		},
+		"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
+			"value": "@linkedService().lsprm_kv_Secret"
+		},
+		"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
+			"value": "https://akv-praneeth-demo-dev.vault.azure.net/"
+		},
+		"tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name": {
+			"value": "demo"
+		},
+		"default_properties_gprm_kv_secret_conn_string_value": {
+			"value": "abspraneethdemodev-account-key"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

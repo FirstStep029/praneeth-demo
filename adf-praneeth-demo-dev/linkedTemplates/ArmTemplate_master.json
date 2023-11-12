@@ -1,0 +1,70 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-praneeth-demo-dev"
+		},
+		"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().lsprm_kv_Secret"
+		},
+		"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://akv-praneeth-demo-dev.vault.azure.net/"
+		},
+		"tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"default_properties_gprm_kv_secret_conn_string_value": {
+			"type": "string",
+			"defaultValue": "abspraneethdemodev-account-key"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-praneeth-demo-dev_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"default_properties_gprm_kv_secret_conn_string_value": {
+						"value": "[parameters('default_properties_gprm_kv_secret_conn_string_value')]"
+					},
+					"ls_akv_praneeth_demo_properties_typeProperties_baseUrl": {
+						"value": "[parameters('ls_akv_praneeth_demo_properties_typeProperties_baseUrl')]"
+					},
+					"ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_abs_praneeth_demo_properties_typeProperties_connectionString_secretName')]"
+					},
+					"tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name": {
+						"value": "[parameters('tr_praneeth_demo_properties_simple-copy-activity_parameters_prm_container_name')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
