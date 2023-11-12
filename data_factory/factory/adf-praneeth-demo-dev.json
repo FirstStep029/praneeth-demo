@@ -1,5 +1,13 @@
 {
 	"name": "adf-praneeth-demo-dev",
+	"properties": {
+		"globalParameters": {
+			"gprm_kv_secret_conn_string": {
+				"type": "string",
+				"value": "abspraneethdemodev-account-key"
+			}
+		}
+	},
 	"location": "southindia",
 	"identity": {
 		"type": "SystemAssigned",
