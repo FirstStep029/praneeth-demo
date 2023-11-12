@@ -4,7 +4,7 @@
 		"globalParameters": {
 			"gprm_kv_secret_conn_string": {
 				"type": "string",
-				"value": "abspraneethdemodev-account-key"
+				"value": "abspraneethdemodev-conn-string"
 			}
 		}
 	},
