@@ -54,8 +54,8 @@
 								"value": "@pipeline().parameters.prm_container_name",
 								"type": "Expression"
 							},
-							"file_name": "Electric_Vehicle_Population_Data.csv",
-							"file_path": "data/inbound/electric_vehicle_data",
+							"file_name": "Motor_Vehicle_Collisions_-_Crashes.csv",
+							"file_path": "data/inbound/vehicle_crash_report",
 							"delimiter": ",",
 							"kv_secret": {
 								"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
@@ -73,8 +73,8 @@
 								"value": "@pipeline().parameters.prm_container_name",
 								"type": "Expression"
 							},
-							"file_path": "data/outbound/electric_vehicle_data",
-							"file_name": "*.parquet",
+							"file_path": "data/outbound/vehicle_crash_report",
+							"file_name": "dataset.parquet",
 							"kv_secret": {
 								"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
 								"type": "Expression"
