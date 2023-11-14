@@ -1,5 +1,5 @@
 {
-	"name": "ds_rw_parqueet",
+	"name": "ds_rw_parquet",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_abs_praneeth_demo",
@@ -43,7 +43,7 @@
 					"type": "Expression"
 				}
 			},
-			"compressionCodec": "snappy"
+			"compressionCodec": "none"
 		},
 		"schema": []
 	}
