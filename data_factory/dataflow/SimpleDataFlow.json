@@ -1,0 +1,30 @@
+{
+	"name": "SimpleDataFlow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_rw_csv",
+						"type": "DatasetReference"
+					},
+					"name": "ReadSourceData"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "FilterColumns"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ReadSourceData",
+				"ReadSourceData select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FilterColumns"
+			]
+		}
+	}
+}
