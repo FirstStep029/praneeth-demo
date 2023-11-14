@@ -1,0 +1,176 @@
+{
+	"name": "simple-bulk-copy",
+	"properties": {
+		"activities": [
+			{
+				"name": "Fetch-Table-Names",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_rw_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": {
+								"value": "@pipeline().parameters.prm_container_name",
+								"type": "Expression"
+							},
+							"file_name": "*.csv",
+							"file_path": {
+								"value": "@pipeline().parameters.prm_source_path",
+								"type": "Expression"
+							},
+							"delimiter": ",",
+							"kv_secret": {
+								"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Run-Each-Table",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Fetch-Table-Names",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Fetch-Table-Names').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copy-Table",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_rw_csv",
+									"type": "DatasetReference",
+									"parameters": {
+										"container_name": {
+											"value": "@pipeline().parameters.prm_container_name",
+											"type": "Expression"
+										},
+										"file_name": "dataset.csv",
+										"file_path": {
+											"value": "@concat(pipeline().parameters.prm_source_path, '/', item().name)",
+											"type": "Expression"
+										},
+										"delimiter": ",",
+										"kv_secret": {
+											"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_rw_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"container_name": {
+											"value": "@pipeline().parameters.prm_container_name",
+											"type": "Expression"
+										},
+										"file_path": {
+											"value": "@concat(pipeline().parameters.prm_target_path, '/bulk-copy/', item().name)",
+											"type": "Expression"
+										},
+										"file_name": "daataset.parquet",
+										"kv_secret": {
+											"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"prm_container_name": {
+				"type": "string",
+				"defaultValue": "praneeth-demo"
+			},
+			"prm_source_path": {
+				"type": "string",
+				"defaultValue": "data/inbound"
+			},
+			"prm_target_path": {
+				"type": "string",
+				"defaultValue": "data/outbound"
+			}
+		},
+		"annotations": []
+	}
+}
