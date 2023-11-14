@@ -1,0 +1,79 @@
+{
+	"name": "simple-data-flow",
+	"properties": {
+		"activities": [
+			{
+				"name": "run-data-flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "SimpleDataFlow",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"ReadSourceData": {
+								"container_name": {
+									"value": "@pipeline().parameters.prm_container_name",
+									"type": "Expression"
+								},
+								"file_name": "dataset.csv",
+								"file_path": {
+									"value": "@concat(pipeline().parameters.prm_source_path, '/electric_vehicle_data')",
+									"type": "Expression"
+								},
+								"delimiter": ",",
+								"kv_secret": {
+									"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+									"type": "Expression"
+								}
+							},
+							"WriteTargetTable": {
+								"container_name": {
+									"value": "@pipeline().parameters.prm_container_name",
+									"type": "Expression"
+								},
+								"file_path": {
+									"value": "@concat(pipeline().parameters.prm_target_path, '/dataflows/electric_vehicle_data')",
+									"type": "Expression"
+								},
+								"file_name": "dataset.parquet",
+								"kv_secret": {
+									"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"prm_container_name": {
+				"type": "string",
+				"defaultValue": "praneeth-demo"
+			},
+			"prm_source_path": {
+				"type": "string",
+				"defaultValue": "data/inbound"
+			},
+			"prm_target_path": {
+				"type": "string",
+				"defaultValue": "data/outbound"
+			}
+		},
+		"annotations": []
+	}
+}
