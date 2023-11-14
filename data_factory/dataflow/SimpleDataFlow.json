@@ -12,18 +12,71 @@
 					"name": "ReadSourceData"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_rw_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "WriteTargetTable"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FilterColumns"
+				},
+				{
+					"name": "MapDrifted",
+					"description": "Creates an explicit mapping for each drifted column"
 				}
 			],
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
-				"     validateSchema: false,",
+				"     validateSchema: true,",
+				"     limit: 100,",
 				"     ignoreNoFilesFound: false) ~> ReadSourceData",
-				"ReadSourceData select(skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> FilterColumns"
+				"MapDrifted select(mapColumn(",
+				"          VIN_NUMBER,",
+				"          City,",
+				"          State,",
+				"          Postal_Code,",
+				"          Make,",
+				"          Model,",
+				"          Electric_Vehicle_Type,",
+				"          Clean_Alternative_Fuel_Vehicle_CAFV_Eligibility,",
+				"          Electric_Range,",
+				"          Base_MSRP,",
+				"          Legislative_District,",
+				"          DOL_Vehicle_ID,",
+				"          Vehicle_Location,",
+				"          Electric_Utility,",
+				"          {2020_Census_Tract}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FilterColumns",
+				"ReadSourceData derive(VIN_NUMBER = toString(byName('VIN_NUMBER')),",
+				"          County = toString(byName('County')),",
+				"          City = toString(byName('City')),",
+				"          State = toString(byName('State')),",
+				"          Postal_Code = toString(byName('Postal_Code')),",
+				"          Model_Year = toString(byName('Model_Year')),",
+				"          Make = toString(byName('Make')),",
+				"          Model = toString(byName('Model')),",
+				"          Electric_Vehicle_Type = toString(byName('Electric_Vehicle_Type')),",
+				"          Clean_Alternative_Fuel_Vehicle_CAFV_Eligibility = toString(byName('Clean_Alternative_Fuel_Vehicle_CAFV_Eligibility')),",
+				"          Electric_Range = toString(byName('Electric_Range')),",
+				"          Base_MSRP = toString(byName('Base_MSRP')),",
+				"          Legislative_District = toString(byName('Legislative_District')),",
+				"          DOL_Vehicle_ID = toString(byName('DOL_Vehicle_ID')),",
+				"          Vehicle_Location = toString(byName('Vehicle_Location')),",
+				"          Electric_Utility = toString(byName('Electric_Utility')),",
+				"          {2020_Census_Tract} = toString(byName('2020_Census_Tract'))) ~> MapDrifted",
+				"FilterColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> WriteTargetTable"
 			]
 		}
 	}
