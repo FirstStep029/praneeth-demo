@@ -21,13 +21,199 @@
 		},
 		"default_properties_gprm_kv_secret_conn_string_value": {
 			"type": "string",
-			"defaultValue": "abspraneethdemodev-account-key"
+			"defaultValue": "abspraneethdemodev-conn-string"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/simple-bulk-copy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Fetch-Table-Names",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_rw_csv",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": {
+										"value": "@pipeline().parameters.prm_container_name",
+										"type": "Expression"
+									},
+									"file_name": "*.csv",
+									"file_path": {
+										"value": "@pipeline().parameters.prm_source_path",
+										"type": "Expression"
+									},
+									"delimiter": ",",
+									"kv_secret": {
+										"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Run-Each-Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Fetch-Table-Names",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Fetch-Table-Names').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy-Table",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_rw_csv",
+											"type": "DatasetReference",
+											"parameters": {
+												"container_name": {
+													"value": "@pipeline().parameters.prm_container_name",
+													"type": "Expression"
+												},
+												"file_name": "dataset.csv",
+												"file_path": {
+													"value": "@concat(pipeline().parameters.prm_source_path, '/', item().name)",
+													"type": "Expression"
+												},
+												"delimiter": ",",
+												"kv_secret": {
+													"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_rw_parquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"container_name": {
+													"value": "@pipeline().parameters.prm_container_name",
+													"type": "Expression"
+												},
+												"file_path": {
+													"value": "@concat(pipeline().parameters.prm_target_path, '/bulk-copy/', item().name)",
+													"type": "Expression"
+												},
+												"file_name": "daataset.parquet",
+												"kv_secret": {
+													"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"prm_container_name": {
+						"type": "string",
+						"defaultValue": "praneeth-demo"
+					},
+					"prm_source_path": {
+						"type": "string",
+						"defaultValue": "data/inbound"
+					},
+					"prm_target_path": {
+						"type": "string",
+						"defaultValue": "data/outbound"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_rw_csv')]",
+				"[concat(variables('factoryId'), '/datasets/ds_rw_parquet')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/simple-copy-activity')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -86,7 +272,7 @@
 										"value": "@pipeline().parameters.prm_container_name",
 										"type": "Expression"
 									},
-									"file_name": "Electric_Vehicle_Population_Data.csv",
+									"file_name": "dataset.csv",
 									"file_path": "data/inbound/electric_vehicle_data",
 									"delimiter": ",",
 									"kv_secret": {
@@ -98,7 +284,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "ds_rw_parqueet",
+								"referenceName": "ds_rw_parquet",
 								"type": "DatasetReference",
 								"parameters": {
 									"container_name": {
@@ -106,7 +292,7 @@
 										"type": "Expression"
 									},
 									"file_path": "data/outbound/electric_vehicle_data",
-									"file_name": "dataset.csv",
+									"file_name": "dataset.parquet",
 									"kv_secret": {
 										"value": "@pipeline().globalParameters.gprm_kv_secret_conn_string",
 										"type": "Expression"
@@ -128,7 +314,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_rw_csv')]",
-				"[concat(variables('factoryId'), '/datasets/ds_rw_parqueet')]"
+				"[concat(variables('factoryId'), '/datasets/ds_rw_parquet')]"
 			]
 		},
 		{
@@ -196,7 +382,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_rw_parqueet')]",
+			"name": "[concat(parameters('factoryName'), '/ds_rw_parquet')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {

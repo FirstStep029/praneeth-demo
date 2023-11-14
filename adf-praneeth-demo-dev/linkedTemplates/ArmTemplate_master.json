@@ -21,7 +21,7 @@
 		},
 		"default_properties_gprm_kv_secret_conn_string_value": {
 			"type": "string",
-			"defaultValue": "abspraneethdemodev-account-key"
+			"defaultValue": "abspraneethdemodev-conn-string"
 		},
 		"containerUri": {
 			"type": "string",

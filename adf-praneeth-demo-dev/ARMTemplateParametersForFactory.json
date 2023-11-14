@@ -15,7 +15,7 @@
 			"value": "demo"
 		},
 		"default_properties_gprm_kv_secret_conn_string_value": {
-			"value": "abspraneethdemodev-account-key"
+			"value": "abspraneethdemodev-conn-string"
 		}
 	}
 }
